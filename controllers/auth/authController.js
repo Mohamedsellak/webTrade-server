@@ -42,14 +42,11 @@ const signUp = async (req,res) =>{
 
         // Respond with the newly created user (excluding password)
         res.status(201).json({
-            message: 'User created successfully',
-            user: {
                 id: newUser._id,
                 username: newUser.username,
                 email: newUser.email,
                 verified: newUser.verified,
                 role: newUser.role,
-            }
         });
     } catch (error) {
         res.status(500).json({ message: error.message });

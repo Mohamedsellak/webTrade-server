@@ -4,6 +4,7 @@ const {
     deleteUser,
     getUsers,
     getUser,
+    createUser,
     updateUser,
     getUserInfo,
     updateUserInfo,
@@ -13,6 +14,7 @@ const {
 // Admin routes
 router.get("/admin/users", getUsers); // Admin route to get all users
 router.get("/admin/users/:id", getUser); // Admin route to get a specific user by ID
+router.post("/admin/users", createUser); // Admin route to create a new user
 router.put("/admin/users/:id", updateUser); // Admin route to update a user by ID
 router.delete("/admin/users/:id", deleteUser); // Admin route to delete a user by ID
 

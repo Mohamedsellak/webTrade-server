@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 
 const depositSchema = new Schema({
   amount: { type: Number, required: true },
-  proof: { type: String, default: '' },
+  prove: { type: String, default: '' },
   status: { type: String, enum: ['pending', 'approved', 'rejected'], default: 'pending' },
   date: { type: Date, default: Date.now },
 });
@@ -15,7 +15,7 @@ const withdrawSchema = new Schema({
   date: { type: Date, default: Date.now },
 });
 
-const tredsSchema = new Schema({
+const tradsSchema = new Schema({
   market: { type: String, required: true },
   timeFrame: { type: String, required: true },
   amount: { type: Number, required: true },
@@ -34,7 +34,7 @@ const userSchema = new Schema({
     role: { type: String, enum: ['admin','subAdmin', 'user'], default: 'user' },
     deposit: [depositSchema],
     withdraw: [withdrawSchema],
-    treds: [tredsSchema],
+    treds: [tradsSchema],
     createdAt: { type: Date, default: Date.now },
 });
 
