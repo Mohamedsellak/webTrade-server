@@ -12,7 +12,7 @@ connectDB();
 
 // Routes
 app.use('/api/auth', require('./routes/authRoute'));
-app.use('/api/users',require('./routes/userRoute'));
+app.use('/api',require('./routes/userRoute'));
 app.use('/api/wallets',require('./routes/walletRoute'));
 
 

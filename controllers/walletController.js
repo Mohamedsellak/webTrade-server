@@ -1,94 +1,68 @@
 const Wallet = require('../models/walletModel');
+const verifyToken = require('./utils/veriftyToken');
+const verifyAdmin = require('./utils/verifyAdmin');
 
-const getWallets = async (req, res) => {
+// Get all wallets (protected by verifyToken)
+const getWallets = [verifyToken, async (req, res) => {
     try {
         const wallets = await Wallet.find();
         res.status(200).json(wallets);
     } catch (err) {
-        res.status(400).json(err.message)
+        res.status(400).json({ message: err.message });
     }
-}
+}];
 
-const getWallet = async (req, res) => {
-    token = req.header('auth-token');
-    if(!token) return res.status(401).send('Access Denied');
-
+// Get a specific wallet (protected by verifyToken and admin access)
+const getWallet = [verifyToken, verifyAdmin, async (req, res) => {
     try {
-        const verified = jwt.verify(token, process.env.TOKEN_SECRET);
-        req.user = verified;
-        if (req.user.role == "admin") {
-            const wallet = await Wallet.findById(req.params.id);
-            res.status(200).json(wallet);
-        }else{
-            res.status(401).send('Access Denied !!! ')
-        }
-        
+        const wallet = await Wallet.findById(req.params.id);
+        if (!wallet) return res.status(404).json('Wallet not found');
+        res.status(200).json(wallet);
     } catch (err) {
-        res.status(400).json(err.message)
+        res.status(400).json({ message: err.message });
     }
-}
+}];
 
-const createWallet = async (req, res) => {
-    token = req.header('auth-token');
-    if(!token) return res.status(401).send('Access Denied');
-
+// Create a new wallet (protected by verifyToken and admin access)
+const createWallet = [verifyToken, verifyAdmin, async (req, res) => {
     try {
-        const verified = jwt.verify(token, process.env.TOKEN_SECRET);
-        req.user = verified;
-        if (req.user.role == "admin") {
-            const wallet = new Wallet({
-                type: req.body.type,
-                adress: req.body.adress,
-            });
-            const savedWallet = await wallet.save();
-            res.status(200).json(savedWallet);
-        }else{
-            res.status(401).send('Access Denied !!! ')
-        }
+        const wallet = new Wallet({
+            type: req.body.type,
+            address: req.body.address,
+        });
+        const savedWallet = await wallet.save();
+        res.status(201).json(savedWallet);
     } catch (err) {
-        res.status(400).json(err.message)
+        res.status(400).json({ message: err.message });
     }
-}
+}];
 
-const updateWallet = async (req, res) => {
-    token = req.header('auth-token');
-    if(!token) return res.status(401).send('Access Denied');
-
+// Update an existing wallet (protected by verifyToken and admin access)
+const updateWallet = [verifyToken, verifyAdmin, async (req, res) => {
     try {
-        const verified = jwt.verify(token, process.env.TOKEN_SECRET);
-        req.user = verified;
-        if (req.user.role == "admin") {
-            const updatedWallet = await Wallet.findByIdAndUpdate(req.params.id, {
-                type: req.body.type,
-                adress: req.body.adress,
-            }, { new: true });
-            res.status(200).json(updatedWallet);
-        }else{
-            res.status(401).send('Access Denied !!! ')
-        }
+        const updatedWallet = await Wallet.findByIdAndUpdate(req.params.id, {
+            type: req.body.type,
+            address: req.body.address,
+        }, { new: true });
+
+        if (!updatedWallet) return res.status(404).json('Wallet not found');
+
+        res.status(200).json(updatedWallet);
     } catch (err) {
-        res.status(400).json(err.message)
+        res.status(400).json({ message: err.message });
     }
-}
+}];
 
-const deleteWallet = async (req, res) => {
-
-    token = req.header('auth-token');
-    if(!token) return res.status(401).send('Access Denied');
-
+// Delete a wallet (protected by verifyToken and admin access)
+const deleteWallet = [verifyToken, verifyAdmin, async (req, res) => {
     try {
-        const verified = jwt.verify(token, process.env.TOKEN_SECRET);
-        req.user = verified;
-        if (req.user.role == "admin") {
-            const wallet = await Wallet.findByIdAndDelete(req.params.id);
-            res.json(wallet);
-        }else{
-            res.status(401).send('Access Denied !!! ')
-        }
+        const wallet = await Wallet.findByIdAndDelete(req.params.id);
+        if (!wallet) return res.status(404).json('Wallet not found' );
+        res.status(200).json('Wallet deleted successfully');
     } catch (err) {
-        res.status(400).json(err.message)
+        res.status(400).json({ message: err.message });
     }
-}
+}];
 
 module.exports = {
     getWallets,
@@ -96,4 +70,4 @@ module.exports = {
     createWallet,
     updateWallet,
     deleteWallet
-}
+};
