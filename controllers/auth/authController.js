@@ -10,8 +10,16 @@ const signIn = async(req,res)=>{
     isCorrectPass = await bcrypt.compare(req.body.password, user.password); 
     if(!isCorrectPass) return res.status(400).json("Password Incorrect !!!")
 
-    let token = jwt.sign({_id : user._id,role:user.role}, process.env.JWT_SECRET ,{expiresIn: "1h"})
-    res.status(200).json({ _id: user._id,role: user.role,token });   
+    let token = jwt.sign({_id : user._id,role:user.role}, process.env.JWT_SECRET ,{expiresIn: "24h"})
+    res.status(200).json({ authData:
+        {
+            _id: user._id,
+            username: user.username,
+            email: user.email,
+            role: user.role,
+            totalBalance : user.totalBalance
+        },
+        token });   
 }
 
 const signUp = async (req,res) =>{
@@ -23,7 +31,7 @@ const signUp = async (req,res) =>{
         // Check if the user already exists
         const existingUser = await User.findOne({ email });
         if (existingUser) {
-        return res.status(400).json('User already exists' );
+        return res.status(400).json('Email already exists' );
         }
 
 
@@ -49,7 +57,7 @@ const signUp = async (req,res) =>{
                 role: newUser.role,
         });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json(error.message);
     }
     
 }

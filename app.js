@@ -15,7 +15,6 @@ app.use(cors())
 // Connect to database
 connectDB();
 
-
 // Routes
 app.use('/api/auth', require('./routes/authRoute'));
 app.use('/api/wallets',require('./routes/walletRoute'));
@@ -26,7 +25,7 @@ app.use('/api',require('./routes/withdrawRoute'));
 
 
 // Start server
-const PORT =  3000 || process.env.PORT;
+const PORT =   process.env.PORT || 3000 ;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

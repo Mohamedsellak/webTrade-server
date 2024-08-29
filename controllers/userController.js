@@ -105,7 +105,7 @@ const deleteUser = [verifyToken, verifyAdmin, async (req, res) => {
 
 const getUserInfo = [verifyToken, async (req, res) => {
     try {
-        const user = await User.findById(req.user._id);
+        const user = await User.findById(req.user._id,{password:0});
         if (!user) return res.status(404).json('User not found');
         res.status(200).json(user);
     } catch (err) {

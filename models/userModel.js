@@ -34,7 +34,7 @@ const userSchema = new Schema({
     role: { type: String, enum: ['admin','subAdmin', 'user'], default: 'user' },
     deposit: [depositSchema],
     withdraw: [withdrawSchema],
-    treds: [tradsSchema],
+    trads: [tradsSchema],
     createdAt: { type: Date, default: Date.now },
 });
 

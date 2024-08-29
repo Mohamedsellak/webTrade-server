@@ -9,13 +9,12 @@ const {
 } = require("../controllers/depositController");
 
 // Admin routes
-router.get("/admin/deposit", adminGetAllDeposits); // Admin route to get all users deposits
-router.put("/admin/deposit/:depositId", adminUpdateDeposit); // Admin route to update a user deposit
-router.delete("/admin/deposit/:depositId", adminDeleteDeposit); // Admin route to delete a user deposit
+router.get("/admin/deposit", adminGetAllDeposits);
+router.put("/admin/deposit/:depositId", adminUpdateDeposit);
+router.delete("/admin/deposit/:depositId", adminDeleteDeposit);
 
 // User routes
-router.get("/user/deposit", getDeposits); // User route to get their own deposit information
-router.post("/user/deposit",createDeposit); // User route to create a new deposit
-
+router.get("/user/deposit", getDeposits);
+router.post("/user/deposit", createDeposit); // Use the updated controller with file handling
 
 module.exports = router;
