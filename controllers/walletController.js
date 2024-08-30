@@ -27,7 +27,7 @@ const getWallet = [verifyToken, verifyAdmin, async (req, res) => {
 const createWallet = [verifyToken, verifyAdmin, async (req, res) => {
     try {
         const wallet = new Wallet({
-            type: req.body.type,
+            name: req.body.name,
             address: req.body.address,
         });
         const savedWallet = await wallet.save();
@@ -41,7 +41,7 @@ const createWallet = [verifyToken, verifyAdmin, async (req, res) => {
 const updateWallet = [verifyToken, verifyAdmin, async (req, res) => {
     try {
         const updatedWallet = await Wallet.findByIdAndUpdate(req.params.id, {
-            type: req.body.type,
+            name: req.body.name,
             address: req.body.address,
         }, { new: true });
 

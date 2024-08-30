@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const walletSchema = new Schema({
-  type: { type: String, default: '' },
-  address: { type: String, enum: ['pending', 'approved', 'rejected'], default: 'pending' },
+  name: { type: String, default: '' },
+  address: { type: String,required: true }
 });
 
 module.exports = mongoose.model("wallets",walletSchema);

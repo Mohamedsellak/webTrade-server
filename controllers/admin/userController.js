@@ -1,7 +1,7 @@
-const User = require("../models/userModel");
+const User = require("../../models/userModel");
 const bcrypt = require('bcrypt');
-const verifyToken = require("./utils/veriftyToken")
-const verifyAdmin = require("./utils/verifyAdmin")
+const verifyToken = require("../utils/veriftyToken")
+const verifyAdmin = require("../utils/verifyAdmin")
 
 
 
@@ -11,7 +11,7 @@ const verifyAdmin = require("./utils/verifyAdmin")
 
 const getUsers = [verifyToken, verifyAdmin, async (req, res) => {
     try {
-        const users = await User.find();
+        const users = await User.find({role:"user"});
         if (!users.length) return res.status(404).json({ message: 'No users found' });
         res.status(200).json(users);
     } catch (err) {1000
@@ -63,21 +63,13 @@ const getUser = [verifyToken, verifyAdmin, async (req, res) => {
 
 const updateUser = [verifyToken, verifyAdmin, async (req, res) => {
     try {
-        // Hash the password
-        const hashedPassword = await bcrypt.hash(req.body.password, 10);
-
         const updates = {
             username: req.body.username,
             email: req.body.email,
-            password:hashedPassword,
             verified: req.body.verified,
             status: req.body.status,
             totalBalance: req.body.totalBalance
         };
-
-        if (req.body.password) {
-            updates.password = await bcrypt.hash(req.body.password, 10);
-        }
 
         const user = await User.findByIdAndUpdate(req.params.id, updates, { new: true });
         if (!user) return res.status(404).json({ message: 'User not found' });
@@ -99,50 +91,6 @@ const deleteUser = [verifyToken, verifyAdmin, async (req, res) => {
     }
 }];
 
-//////////////////////////////////////////////////////////////
-////////////////////////// User /////////////////////////////
-////////////////////////////////////////////////////////////
-
-const getUserInfo = [verifyToken, async (req, res) => {
-    try {
-        const user = await User.findById(req.user._id,{password:0});
-        if (!user) return res.status(404).json('User not found');
-        res.status(200).json(user);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
-}];
-
-const updateUserInfo = [verifyToken, async (req, res) => {
-    try {
-        const updates = {
-            username: req.body.username,
-            email: req.body.email
-        };
-
-        if (req.body.password) {
-            updates.password = await bcrypt.hash(req.body.password, 10);
-        }
-
-        const user = await User.findByIdAndUpdate(req.user._id, updates, { new: true });
-        if (!user) return res.status(404).json('User not found');
-
-        res.status(200).json(user);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
-}];
-
-const deleteUserAccount = [verifyToken, async (req, res) => {
-    try {
-        const user = await User.findByIdAndDelete(req.user._id);
-        if (!user) return res.status(404).json('User not found' );
-
-        res.json({ message: 'User account deleted successfully' });
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
-}];
 
 module.exports = {
     getUsers,
@@ -150,7 +98,4 @@ module.exports = {
     getUser,
     updateUser,
     deleteUser,
-    getUserInfo,
-    updateUserInfo,
-    deleteUserAccount
 };
