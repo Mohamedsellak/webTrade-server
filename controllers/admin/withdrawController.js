@@ -9,7 +9,7 @@ const verifyAdmin = require("../utils/verifyAdmin")
 const adminGetAllWithdraws = [verifyToken, verifyAdmin, async (req, res) => {
 // Get all withdraws for all users
     try {
-        const users = await User.find({},{_id:1,username:1,email:1,withdraw:1});
+        const users = await User.find({},{_id:1,username:1,email:1,totalBalance:1,withdraw:1});
         res.status(200).json(users);
     } catch (err) {
         res.status(500).json({ message: err.message });
