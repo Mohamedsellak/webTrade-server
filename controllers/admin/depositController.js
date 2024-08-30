@@ -1,4 +1,5 @@
 const User = require('../../models/userModel');
+const fs = require('fs/promises')
 const verifyToken = require("../utils/veriftyToken")
 const verifyAdmin = require("../utils/verifyAdmin")
 
@@ -65,7 +66,8 @@ const adminUpdateDeposit = [verifyToken, verifyAdmin, async (req, res) => {
             const depositIndex = user.deposit.findIndex(deposit => deposit._id.toString() === depositId);
             if (depositIndex === -1) return res.status(404).json({ message: 'Deposit not found' });
 
-            // Extract the image path from the 'prove' field
+            // Extract the deposit and its image path
+            const deposit = user.deposit[depositIndex];
             const imagePath = deposit.prove;
 
             try {
